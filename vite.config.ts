@@ -10,6 +10,7 @@ export default defineConfig({
     vue(),
     tailwindcss(),
   ],
+  base: '/Notes-App/',
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
