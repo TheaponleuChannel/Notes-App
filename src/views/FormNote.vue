@@ -1,23 +1,41 @@
 <script setup lang="ts">
 
-import { ref } from "vue";
-import { Notes } from "../data-store";
+import { onMounted, ref } from "vue";
 import { useRouter, useRoute } from "vue-router";
+import { Notes } from "../data-store";
+import NoteService from "../service/NoteService";
 
 const route = useRoute();
 const router = useRouter();
-const title = ref("");
-const content = ref("");
-const id = Number(route.params.id);
-const note = Notes.find((i) => i.id === id);
+let title = ref("");
+let content = ref("");
+const noteId = Number(route.params.id);
+const note = Notes.find((i) => i.id === noteId);
 
 if(note) {
     title.value = note.title;
     content.value = note.content
 }
 
+
+onMounted(() => {
+    //  noteId = Number(route.params.id);
+    //  noteId && getNoteById(noteId);
+})
+
+//get note by id with api
+// const getNoteById = async (id: number) => {
+//     try {
+//         const note = await NoteService.getNote(id);
+//         title.value = note.title;
+//         content.value = note.content;
+//     } catch (error) {
+//         console.error(error);
+//     }
+// }
+
 const submit = () => {
-    note ? update(note) : save();
+    noteId ? update(note) : save();
 };
 
 const save = () => {
@@ -43,12 +61,42 @@ const update = (note: any) => {
     router.push("/");
     }
 }
+
+//save with api
+// const save = async () => {
+//     if (title.value ) {
+//         try {
+//             await NoteService.createNote({title: title.value, content: content.value});
+//         } catch (error) {
+//             console.error(error, "error");
+//         }
+//     } else {
+//         return alert("Title is required");
+//     }
+//     router.push("/");
+// }
+
+//update with api
+// const update = async () => {
+//     if (title.value) {
+//         try {
+//             await NoteService.updateNote(noteId, {title: title.value, content: content.value, id: noteId});
+//         } catch (error) {
+//             console.error(error, "error");
+//         }
+//     } else {
+//         return alert("Title is required");
+//     }
+//     router.push("/");
+
+
+// }
 </script>
 
 <template>
 <div class="w-1/2 mx-auto absolute left-1/2 transform -translate-x-1/2 ">
         <header class="flex justify-between py-2">
-          <h1 class="text-2xl font-bold">{{note ? 'Edit' : 'Add'}} Note</h1>
+          <h1 class="text-2xl font-bold">{{noteId ? 'Edit' : 'Add'}} Note</h1>
           <section class="flex gap-4">
               <button class="bg-gray-500 hover:bg-gray-700 cursor-pointer text-white font-bold py-2 px-4 rounded" @click="$router.push({ name: 'note' })"  >Back</button>
               <button class="bg-blue-500 hover:bg-blue-700 cursor-pointer text-white font-bold py-2 px-4 rounded" @click="submit">Save</button>
